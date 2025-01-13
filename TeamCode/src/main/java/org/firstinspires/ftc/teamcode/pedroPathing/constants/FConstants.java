@@ -2,13 +2,16 @@ package org.firstinspires.ftc.teamcode.pedroPathing.constants;
 
 import com.pedropathing.localization.Localizers;
 import com.pedropathing.follower.FollowerConstants;
+import com.pedropathing.localization.constants.DriveEncoderIMUConstants;
+import com.pedropathing.localization.Encoder;
 import com.pedropathing.util.CustomFilteredPIDFCoefficients;
 import com.pedropathing.util.CustomPIDFCoefficients;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class FConstants {
     static {
-        FollowerConstants.localizers = Localizers.THREE_WHEEL;
+        FollowerConstants.localizers = Localizers.DRIVE_ENCODERS_IMU;
 
         FollowerConstants.leftFrontMotorName = "FrontLeft";
         FollowerConstants.leftRearMotorName = "BackLeft";
@@ -19,6 +22,21 @@ public class FConstants {
         FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
         FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
+
+        DriveEncoderIMUConstants.forwardTicksToInches = 1;
+        DriveEncoderIMUConstants.strafeTicksToInches = 1;
+        DriveEncoderIMUConstants.turnTicksToInches = 1;
+
+        DriveEncoderIMUConstants.robot_Width = 1;
+        DriveEncoderIMUConstants.robot_Length = 1;
+
+        DriveEncoderIMUConstants.leftFrontEncoderDirection = Encoder.REVERSE;
+        DriveEncoderIMUConstants.rightFrontEncoderDirection = Encoder.FORWARD;
+        DriveEncoderIMUConstants.leftRearEncoderDirection = Encoder.REVERSE;
+        DriveEncoderIMUConstants.rightRearEncoderDirection = Encoder.FORWARD;
+
+        DriveEncoderIMUConstants.IMU_HardwareMapName = "imu";
+        DriveEncoderIMUConstants.IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
 
         FollowerConstants.mass = 13;
 

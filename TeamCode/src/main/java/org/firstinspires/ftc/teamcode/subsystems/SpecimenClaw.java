@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MAIN;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
@@ -13,15 +13,22 @@ public class SpecimenClaw extends Subsystem {
 
     // USER CODE
     public Servo servo;
-
     public String name = "SpecimenClaw";
+    public String state;
 
     public Command open() {
+        state = "OPEN";
         return new ServoToPosition(servo, 0.6, this);
     }
 
     public Command close() {
+        state = "CLOSED";
         return new ServoToPosition(servo, 0, this);
+    }
+
+    @Override
+    public void periodic() {
+        OpModeData.telemetry.addData("Specimen Claw", state);
     }
 
     @Override

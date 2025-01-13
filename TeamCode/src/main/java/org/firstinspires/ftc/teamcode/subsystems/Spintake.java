@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MAIN;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
@@ -15,17 +15,26 @@ public class Spintake extends Subsystem {
     public Servo servo;
 
     public String name = "Spintake";
+    public String state;
 
     public Command grab() {
+        state = "GRABBING";
         return new ServoToPosition(servo, 1, this);
     }
 
     public Command drop() {
+        state = "DROPPING";
         return new ServoToPosition(servo, 0, this);
     }
 
-    public Command stop() {
+    public Command stopMoving() {
+        state = "STOPPED";
         return new ServoToPosition(servo, 0.5, this);
+    }
+
+    @Override
+    public void periodic() {
+        OpModeData.telemetry.addData("Spintake", state);
     }
 
     @Override

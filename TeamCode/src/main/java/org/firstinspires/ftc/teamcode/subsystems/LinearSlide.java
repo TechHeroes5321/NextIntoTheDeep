@@ -1,14 +1,11 @@
-package org.firstinspires.ftc.teamcode.MAIN;
+package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
-import com.rowanmcalpin.nextftc.core.control.controllers.PIDController;
+import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
-
-import java.util.Collections;
-import java.util.HashSet;
 
 public class LinearSlide extends Subsystem {
     // BOILERPLATE
@@ -18,7 +15,7 @@ public class LinearSlide extends Subsystem {
     // USER CODE
     public MotorEx motor;
 
-    public PIDController controller = new PIDController(new PIDCoefficients(0.005, 0.0, 0.0));
+    public PIDFController controller = new PIDFController(new PIDFCoefficients(0.005, 0.0, 0.0,0));
 
     public String name = "LinearSlide";
 
