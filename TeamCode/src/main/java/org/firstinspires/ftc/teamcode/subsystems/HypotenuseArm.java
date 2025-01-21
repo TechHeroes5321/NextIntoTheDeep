@@ -22,7 +22,7 @@ public class HypotenuseArm extends Subsystem {
 
     @Override
     public void periodic() {
-        //OpModeData.telemetry.addData("hypotenuse pos", motor.getCurrentPosition());
+        //OpModeData.INSTANCE.telemetry.addData("hypotenuse pos", motor.getCurrentPosition());
     }
 
     @Override

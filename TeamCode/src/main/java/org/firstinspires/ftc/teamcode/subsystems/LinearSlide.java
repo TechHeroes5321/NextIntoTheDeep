@@ -47,7 +47,7 @@ public class LinearSlide extends Subsystem {
 
     @Override
     public void periodic() {
-        //OpModeData.telemetry.addData("slide pos", motor.getCurrentPosition());
+        //OpModeData.INSTANCE.telemetry.addData("slide pos", motor.getCurrentPosition());
     }
 
     @Override

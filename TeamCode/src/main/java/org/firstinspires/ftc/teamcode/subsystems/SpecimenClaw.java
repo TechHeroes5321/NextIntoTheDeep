@@ -28,7 +28,7 @@ public class SpecimenClaw extends Subsystem {
 
     @Override
     public void periodic() {
-        //OpModeData.telemetry.addData("Specimen Claw", state);
+        //OpModeData.INSTANCE.telemetry.addData("Specimen Claw", state);
     }
 
     @Override

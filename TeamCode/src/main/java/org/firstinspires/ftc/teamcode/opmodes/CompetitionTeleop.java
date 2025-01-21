@@ -72,10 +72,10 @@ public class CompetitionTeleop extends NextFTCOpMode {
         FrontRight = new MotorEx("FrontRight");
         BackLeft = new MotorEx("BackLeft");
         BackRight = new MotorEx("BackRight");
-        FrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        FrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        BackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        BackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        FrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        FrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         driveMotors = new MotorEx[] {FrontLeft, FrontRight, BackLeft, BackRight};
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
