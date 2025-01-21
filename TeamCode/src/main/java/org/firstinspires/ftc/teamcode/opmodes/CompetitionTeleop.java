@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
+import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 
@@ -38,6 +39,7 @@ public class CompetitionTeleop extends NextFTCOpMode {
     public void onInit () {
         telemetry.addLine("Let's Eul this lamp");
         telemetry.speak("Let's oil this lamp");
+        OpModeData.INSTANCE.telemetry = telemetry;
         mecanumDriveInit();
         telemetry.addLine("varooooooommmmmm! :3");
         telemetry.update();
