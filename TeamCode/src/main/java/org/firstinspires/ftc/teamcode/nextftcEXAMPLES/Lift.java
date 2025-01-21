@@ -15,10 +15,10 @@ public class Lift extends Subsystem {
     // USER CODE
     public MotorEx motor;
 
-    public PIDController controller = new PIDController(new PIDCoefficients(0.005, 0.0, 0.0));
+    //public PIDController controller = new PIDController(new PIDCoefficients(0.005, 0.0, 0.0));
 
     public String name = "lift_motor";
-
+/*
     public Command toLow() {
         return new RunToPosition(motor, // MOTOR TO MOVE
                 0.0, // TARGET POSITION, IN TICKS
@@ -39,7 +39,7 @@ public class Lift extends Subsystem {
                 controller, // CONTROLLER TO IMPLEMENT
                 this); // IMPLEMENTED SUBSYSTEM
     }
-    
+    **/
     @Override
     public void initialize() {
         motor = new MotorEx(name);

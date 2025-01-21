@@ -12,10 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
-
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.*;
 
 /**
  * This is the Triangle autonomous OpMode.

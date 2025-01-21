@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.ftc.OpModeData;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
+
+import org.jetbrains.annotations.NotNull;
 
 public class LinearSlide extends Subsystem {
     // BOILERPLATE
@@ -15,7 +19,7 @@ public class LinearSlide extends Subsystem {
     // USER CODE
     public MotorEx motor;
 
-    public PIDFController controller = new PIDFController(new PIDFCoefficients(0.005, 0.0, 0.0,0));
+    public PIDFController controller = new PIDFController(0.005, 0.0, 0.0);
 
     public String name = "LinearSlide";
 
@@ -33,6 +37,17 @@ public class LinearSlide extends Subsystem {
 
     public Command toBottom() {
         return new RunToPosition(motor, 0, controller, this);
+    }
+
+    @Override
+    @NotNull
+    public Command getDefaultCommand() {
+        return new HoldPosition(motor, controller, this);
+    }
+
+    @Override
+    public void periodic() {
+        //OpModeData.telemetry.addData("slide pos", motor.getCurrentPosition());
     }
 
     @Override

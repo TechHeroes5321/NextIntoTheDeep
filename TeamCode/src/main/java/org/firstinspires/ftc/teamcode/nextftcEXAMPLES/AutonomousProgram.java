@@ -12,7 +12,7 @@ public class AutonomousProgram extends NextFTCOpMode {
     public AutonomousProgram() {
         super(Claw.INSTANCE, Lift.INSTANCE);
     }
-
+/*
     public Command firstRoutine() {
         return new SequentialGroup(
                 Lift.INSTANCE.toHigh(),
@@ -27,9 +27,9 @@ public class AutonomousProgram extends NextFTCOpMode {
                 )
         );
     }
-
+**/
     @Override
     public void onStartButtonPressed() {
-        firstRoutine().invoke();
+        //firstRoutine().invoke();
     }
 }

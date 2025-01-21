@@ -12,6 +12,7 @@ public class hypotenusetest extends OpMode {
     /**Here is where you declare your variables and OpMode Members*/
     private ElapsedTime runtime = new ElapsedTime();
     DcMotorEx HypotenuseArm;
+    DcMotorEx LinearSlide;
     double motorpower;
 
     /** "init" runs once upon hitting the INIT button*/
@@ -19,6 +20,8 @@ public class hypotenusetest extends OpMode {
     public void init() {
         HypotenuseArm = hardwareMap.get(DcMotorEx.class, "HypotenuseArm");
         HypotenuseArm.setDirection(DcMotorEx.Direction.FORWARD);
+        LinearSlide = hardwareMap.get(DcMotorEx.class, "LinearSlide");
+        LinearSlide.setDirection(DcMotorEx.Direction.FORWARD);
         telemetry.addData("Status", "Initialized");
         motorpower = 0.1;
     }
@@ -44,6 +47,12 @@ public class hypotenusetest extends OpMode {
         if(gamepad1.b){
             motorpower -= 0.05;
         }
+        if(motorpower > 1){
+            motorpower = 1;
+        }
+        if(motorpower < -1){
+            motorpower = -1;
+        }
 
         if(!(gamepad1.left_bumper || gamepad1.right_bumper)){
             HypotenuseArm.setPower(0);
@@ -53,8 +62,17 @@ public class hypotenusetest extends OpMode {
             HypotenuseArm.setPower(-motorpower);
         }
 
+        if(!(gamepad1.dpad_up || gamepad1.dpad_down)){
+            LinearSlide.setPower(0);
+        } else if (gamepad1.dpad_up) {
+            LinearSlide.setPower(0.5);
+        } else {
+            LinearSlide.setPower(-0.5);
+        }
+
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("position", HypotenuseArm.getCurrentPosition());
+        telemetry.addData("power", motorpower);
         telemetry.addData("velocity", HypotenuseArm.getVelocity());
         telemetry.update();
     }

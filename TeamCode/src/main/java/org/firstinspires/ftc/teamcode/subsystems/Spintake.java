@@ -34,7 +34,7 @@ public class Spintake extends Subsystem {
 
     @Override
     public void periodic() {
-        OpModeData.telemetry.addData("Spintake", state);
+        //OpModeData.telemetry.addData("Spintake", state);
     }
 
     @Override

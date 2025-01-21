@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.constants;
 
-import com.pedropathing.localization.Localizers;
 import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.localization.constants.DriveEncoderIMUConstants;
-import com.pedropathing.localization.Encoder;
+import com.pedropathing.localization.Localizers;
 import com.pedropathing.util.CustomFilteredPIDFCoefficients;
 import com.pedropathing.util.CustomPIDFCoefficients;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class FConstants {
@@ -18,27 +15,12 @@ public class FConstants {
         FollowerConstants.rightFrontMotorName = "FrontRight";
         FollowerConstants.rightRearMotorName = "BackRight";
 
-        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
-        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
-        FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
-        FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.REVERSE;
 
-        DriveEncoderIMUConstants.forwardTicksToInches = 1;
-        DriveEncoderIMUConstants.strafeTicksToInches = 1;
-        DriveEncoderIMUConstants.turnTicksToInches = 1;
-
-        DriveEncoderIMUConstants.robot_Width = 1;
-        DriveEncoderIMUConstants.robot_Length = 1;
-
-        DriveEncoderIMUConstants.leftFrontEncoderDirection = Encoder.REVERSE;
-        DriveEncoderIMUConstants.rightFrontEncoderDirection = Encoder.FORWARD;
-        DriveEncoderIMUConstants.leftRearEncoderDirection = Encoder.REVERSE;
-        DriveEncoderIMUConstants.rightRearEncoderDirection = Encoder.FORWARD;
-
-        DriveEncoderIMUConstants.IMU_HardwareMapName = "imu";
-        DriveEncoderIMUConstants.IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.LEFT);
-
-        FollowerConstants.mass = 13;
+        FollowerConstants.mass = 12.7;
 
         FollowerConstants.xMovement = 57.8741;
         FollowerConstants.yMovement = 52.295;
