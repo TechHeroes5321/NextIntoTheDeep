@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
-import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+import com.rowanmcalpin.nextftc.pedro.DriverControlled;
+import com.rowanmcalpin.nextftc.pedro.PedroOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDriverControlledFixed;
 import org.firstinspires.ftc.teamcode.subsystems.HypotenuseArm;
@@ -20,12 +20,12 @@ import org.firstinspires.ftc.teamcode.subsystems.Spintake;
 
 @TeleOp(name = "Euler Teleop")
 
-public class CompetitionTeleop extends NextFTCOpMode {
+public class CompetitionTeleop extends PedroOpMode {
     public CompetitionTeleop() {
         super(HypotenuseArm.INSTANCE, LinearSlide.INSTANCE, SpecimenClaw.INSTANCE, Spintake.INSTANCE);
     }
         /**Here is where you declare your variables and OpMode Members*/
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     public Command driverControlled;
     public MotorEx FrontLeft;
@@ -34,14 +34,16 @@ public class CompetitionTeleop extends NextFTCOpMode {
     public MotorEx BackRight;
     public IMU imu;
     public MotorEx[] driveMotors;
+    //private AndroidTextToSpeech androidTextToSpeech;
 
     @Override
     public void onInit () {
         telemetry.addLine("Let's Eul this lamp");
-        telemetry.speak("Let's oil this lamp");
-        OpModeData.INSTANCE.telemetry = telemetry;
+        //androidTextToSpeech.initialize();
+        //androidTextToSpeech.setLanguageAndCountry("en", "US");
+        //androidTextToSpeech.speak("Let's oil this lamp");
+        OpModeData.telemetry = telemetry;
         mecanumDriveInit();
-        telemetry.addLine("varooooooommmmmm! :3");
         telemetry.update();
     }
 
@@ -54,6 +56,7 @@ public class CompetitionTeleop extends NextFTCOpMode {
     public void onStartButtonPressed () {
         driverControlled = new MecanumDriverControlledFixed(driveMotors, gamepadManager.getGamepad1(), false, imu);
         driverControlled.invoke();
+        registerControls();
         runtime.reset();
     }
 
@@ -79,12 +82,29 @@ public class CompetitionTeleop extends NextFTCOpMode {
         BackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         BackRight.setDirection(DcMotorSimple.Direction.REVERSE);
         driveMotors = new MotorEx[] {FrontLeft, FrontRight, BackLeft, BackRight};
+
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD)));
         imu.resetYaw();
     }
+
+    private void registerControls() {
+        gamepadManager.getGamepad1().getA().setPressedCommand(SpecimenClaw.INSTANCE::toggle);
+        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(Spintake.INSTANCE::grab);
+        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(Spintake.INSTANCE::drop);
+        gamepadManager.getGamepad1().getDpadLeft().setPressedCommand(Spintake.INSTANCE::stopMoving);
+        gamepadManager.getGamepad2().getDpadRight().setPressedCommand(LinearSlide.INSTANCE::resetEncoderZeroL);
+        gamepadManager.getGamepad2().getDpadRight().setPressedCommand(HypotenuseArm.INSTANCE::resetEncoderZero);
+        gamepadManager.getGamepad1().getLeftBumper().setPressedCommand(HypotenuseArm.INSTANCE::toLower);
+        gamepadManager.getGamepad1().getRightBumper().setPressedCommand(HypotenuseArm.INSTANCE::retract);
+        gamepadManager.getGamepad1().getY().setPressedCommand(HypotenuseArm.INSTANCE::score);
+        gamepadManager.getGamepad1().getX().setPressedCommand(LinearSlide.INSTANCE::toTop);
+        gamepadManager.getGamepad1().getB().setPressedCommand(LinearSlide.INSTANCE::toBottom);
+    }
+
+
 
     public void telemetry () {
     telemetry.addData("Status", "Run Time: " + runtime.toString());

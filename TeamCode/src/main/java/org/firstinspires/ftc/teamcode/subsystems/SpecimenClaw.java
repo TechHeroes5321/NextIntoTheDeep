@@ -6,6 +6,8 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.ServoToPosition;
 
+import java.util.Objects;
+
 public class SpecimenClaw extends Subsystem {
     // BOILERPLATE
     public static final SpecimenClaw INSTANCE = new SpecimenClaw();
@@ -26,13 +28,22 @@ public class SpecimenClaw extends Subsystem {
         return new ServoToPosition(servo, 0, this);
     }
 
+    public Command toggle() {
+        if(Objects.equals(state, "OPEN")){
+            return close();
+        } else {
+            return open(); 
+        }
+    }
+
     @Override
     public void periodic() {
-        //OpModeData.INSTANCE.telemetry.addData("Specimen Claw", state);
+        OpModeData.telemetry.addData("Specimen Claw", state);
     }
 
     @Override
     public void initialize() {
         servo = OpModeData.INSTANCE.getHardwareMap().get(Servo.class, name);
+        close();
     }
 }

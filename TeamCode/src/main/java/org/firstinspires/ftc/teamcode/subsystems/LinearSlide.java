@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
 import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
@@ -19,12 +20,19 @@ public class LinearSlide extends Subsystem {
     // USER CODE
     public MotorEx motor;
 
-    public PIDFController controller = new PIDFController(0.005, 0.0, 0.0);
+    public double Kf;
+
+    public PIDFController controller = new PIDFController(new PIDCoefficients(0.005,0,0), v -> Kf);
 
     public String name = "LinearSlide";
 
+    public Command resetEncoderZeroL() {
+        motor.setCurrentPosition(0);
+        return new NullCommand();
+    }
+
     public Command toTop() {
-        return new RunToPosition(motor, 9800.0, controller, this);
+        return new RunToPosition(motor, -3200, controller, this);
     }
 
     public Command prepSpecimen() {
@@ -47,7 +55,7 @@ public class LinearSlide extends Subsystem {
 
     @Override
     public void periodic() {
-        //OpModeData.INSTANCE.telemetry.addData("slide pos", motor.getCurrentPosition());
+        OpModeData.INSTANCE.telemetry.addData("slide pos", motor.getCurrentPosition());
     }
 
     @Override

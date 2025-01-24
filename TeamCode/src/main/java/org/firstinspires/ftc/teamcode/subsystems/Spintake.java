@@ -19,12 +19,12 @@ public class Spintake extends Subsystem {
 
     public Command grab() {
         state = "GRABBING";
-        return new ServoToPosition(servo, 1, this);
+        return new ServoToPosition(servo, 0, this);
     }
 
     public Command drop() {
         state = "DROPPING";
-        return new ServoToPosition(servo, 0, this);
+        return new ServoToPosition(servo, 1, this);
     }
 
     public Command stopMoving() {
@@ -34,7 +34,7 @@ public class Spintake extends Subsystem {
 
     @Override
     public void periodic() {
-        //OpModeData.INSTANCE.telemetry.addData("Spintake", state);
+        OpModeData.telemetry.addData("Spintake", state);
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -22,6 +23,8 @@ public class hypotenusetest extends OpMode {
         HypotenuseArm.setDirection(DcMotorEx.Direction.FORWARD);
         LinearSlide = hardwareMap.get(DcMotorEx.class, "LinearSlide");
         LinearSlide.setDirection(DcMotorEx.Direction.FORWARD);
+        HypotenuseArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Status", "Initialized");
         motorpower = 0.1;
     }
@@ -71,7 +74,8 @@ public class hypotenusetest extends OpMode {
         }
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("position", HypotenuseArm.getCurrentPosition());
+        telemetry.addData("hyp pos", HypotenuseArm.getCurrentPosition());
+        telemetry.addData("slide pos", HypotenuseArm.getCurrentPosition());
         telemetry.addData("power", motorpower);
         telemetry.addData("velocity", HypotenuseArm.getVelocity());
         telemetry.update();
