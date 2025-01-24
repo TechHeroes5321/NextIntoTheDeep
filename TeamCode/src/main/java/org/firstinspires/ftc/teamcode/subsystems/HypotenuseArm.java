@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.*;
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedforward.*;
 import com.ThermalEquilibrium.homeostasis.Filters.Estimators.RawValue;
+import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.ThermalEquilibrium.homeostasis.Systems.BasicSystem;
 import com.acmerobotics.dashboard.config.Config;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
-import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
+//import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
@@ -68,11 +71,12 @@ public class HypotenuseArm extends Subsystem {
     }
 
 
+
     PIDCoefficients coefficients = new PIDCoefficients(0.3,0.04,0.01);
     DoubleSupplier motorPosition = new DoubleSupplier() {
         @Override
         public double getAsDouble() {
-            return exampleMotor.getPosition();
+            return motor.getCurrentPosition();
         }
     };
     BasicPID controller = new BasicPID(coefficients);
@@ -80,7 +84,7 @@ public class HypotenuseArm extends Subsystem {
     RawValue noFilter = new RawValue(motorPosition);
     BasicSystem system = new BasicSystem(noFilter,controller,feedforward);
 
-while (true) {
+    while (true) {
         double command = system.update(referencePosition);
     }
 
