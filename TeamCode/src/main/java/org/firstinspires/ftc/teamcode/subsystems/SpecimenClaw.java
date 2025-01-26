@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.ServoToPosition;
 
@@ -16,16 +17,23 @@ public class SpecimenClaw extends Subsystem {
     // USER CODE
     public Servo servo;
     public String name = "SpecimenClaw";
-    public String state;
+    public String state = "NONE";
+
 
     public Command open() {
-        state = "OPEN";
-        return new ServoToPosition(servo, 0.6, this);
+        return new InstantCommand(
+                () -> { state = "OPEN";
+                    new ServoToPosition(servo, 0.6, this);
+                    return null; }
+        );
     }
 
     public Command close() {
-        state = "CLOSED";
-        return new ServoToPosition(servo, 0, this);
+        return new InstantCommand(
+                () -> { state = "CLOSED";
+                    new ServoToPosition(servo, 0, this);
+                return null; }
+        );
     }
 
     public Command toggle() {

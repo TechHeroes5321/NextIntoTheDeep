@@ -6,13 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.ftc.NextFTCOpMode;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import com.rowanmcalpin.nextftc.pedro.DriverControlled;
 import com.rowanmcalpin.nextftc.pedro.PedroOpMode;
 
-import org.firstinspires.ftc.teamcode.MecanumDriverControlledFixed;
+import org.firstinspires.ftc.teamcode.customCommands.MecanumDriverControlledFixed;
 import org.firstinspires.ftc.teamcode.subsystems.HypotenuseArm;
 import org.firstinspires.ftc.teamcode.subsystems.LinearSlide;
 import org.firstinspires.ftc.teamcode.subsystems.SpecimenClaw;
@@ -95,13 +93,14 @@ public class CompetitionTeleop extends PedroOpMode {
         gamepadManager.getGamepad1().getDpadUp().setPressedCommand(Spintake.INSTANCE::grab);
         gamepadManager.getGamepad1().getDpadDown().setPressedCommand(Spintake.INSTANCE::drop);
         gamepadManager.getGamepad1().getDpadLeft().setPressedCommand(Spintake.INSTANCE::stopMoving);
-        gamepadManager.getGamepad2().getDpadRight().setPressedCommand(LinearSlide.INSTANCE::resetEncoderZeroL);
+        gamepadManager.getGamepad2().getDpadRight().setPressedCommand(LinearSlide.INSTANCE::resetEncoderZero);
         gamepadManager.getGamepad2().getDpadRight().setPressedCommand(HypotenuseArm.INSTANCE::resetEncoderZero);
         gamepadManager.getGamepad1().getLeftBumper().setPressedCommand(HypotenuseArm.INSTANCE::toLower);
         gamepadManager.getGamepad1().getRightBumper().setPressedCommand(HypotenuseArm.INSTANCE::retract);
         gamepadManager.getGamepad1().getY().setPressedCommand(HypotenuseArm.INSTANCE::score);
         gamepadManager.getGamepad1().getX().setPressedCommand(LinearSlide.INSTANCE::toTop);
         gamepadManager.getGamepad1().getB().setPressedCommand(LinearSlide.INSTANCE::toBottom);
+        gamepadManager.getGamepad1().getDpadRight().setPressedCommand(LinearSlide.INSTANCE::toAscend);
     }
 
 

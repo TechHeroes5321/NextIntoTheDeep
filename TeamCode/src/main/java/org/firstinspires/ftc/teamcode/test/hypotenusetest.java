@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "hypotenuse test")
@@ -22,7 +23,7 @@ public class hypotenusetest extends OpMode {
         HypotenuseArm = hardwareMap.get(DcMotorEx.class, "HypotenuseArm");
         HypotenuseArm.setDirection(DcMotorEx.Direction.FORWARD);
         LinearSlide = hardwareMap.get(DcMotorEx.class, "LinearSlide");
-        LinearSlide.setDirection(DcMotorEx.Direction.FORWARD);
+        LinearSlide.setDirection(DcMotorEx.Direction.REVERSE);
         HypotenuseArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LinearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         telemetry.addData("Status", "Initialized");

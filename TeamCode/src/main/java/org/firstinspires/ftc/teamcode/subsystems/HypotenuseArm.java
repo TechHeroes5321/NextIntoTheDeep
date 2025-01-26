@@ -4,91 +4,81 @@ import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.*;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedforward.*;
 import com.ThermalEquilibrium.homeostasis.Filters.Estimators.RawValue;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
+import com.ThermalEquilibrium.homeostasis.Parameters.FeedforwardCoefficientsEx;
 import com.ThermalEquilibrium.homeostasis.Systems.BasicSystem;
 import com.acmerobotics.dashboard.config.Config;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
-import com.rowanmcalpin.nextftc.core.command.utility.NullCommand;
-//import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
-import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
-import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.function.DoubleSupplier;
 
 @Config
 public class HypotenuseArm extends Subsystem {
     // BOILERPLATE
     public static final HypotenuseArm INSTANCE = new HypotenuseArm();
     private HypotenuseArm() { }
-
     // USER CODE
     public MotorEx motor;
-    public static double Kf = 0;
-    public double P = 0;
-    public double I = 0;
-    public double D = 0;
-
-    //public PIDFController controller = new PIDFController(new PIDCoefficients(0.005,0,0));
-
+    public static double Kp = 0.005;
+    public static double Ki = 0;
+    public static double Kd = 0;
+    public static double Kcos = 0;
+    public static boolean motorOn = true;
+    public double targetPosition;
+    public BasicSystem controlSystem;
     public String name = "HypotenuseArm";
 
     public Command resetEncoderZero() {
-        motor.setCurrentPosition(0);
-        return new NullCommand();
-    }
-
-    public Command toLower() {
-        return new RunToPosition(motor, 0, controller, this);
-    }
-
-    public Command score() {
-        return new RunToPosition(motor, 350, controller, this);
-    }
-
-    public Command retract() {
-        return new RunToPosition(motor, 860, controller, this);
-    }
-
-    @Override
-    public void periodic() {
-        OpModeData.telemetry.addData("hypotenuse pos", motor.getCurrentPosition());
-    }
-
-    @Override
-    @NotNull
-    public Command getDefaultCommand() {
-        return new HoldPosition(motor, controller, this);
+        return new InstantCommand(
+                () -> { motor.setCurrentPosition(0); return null; }
+        );
     }
 
     @Override
     public void initialize() {
         motor = new MotorEx(name);
+        homeostasisInit();
     }
 
+    @Override
+    public void periodic() {
+        moveMotor();
+        OpModeData.telemetry.addData("arm pos", motor.getCurrentPosition());
+    }
 
-
-    PIDCoefficients coefficients = new PIDCoefficients(0.3,0.04,0.01);
-    DoubleSupplier motorPosition = new DoubleSupplier() {
-        @Override
-        public double getAsDouble() {
-            return motor.getCurrentPosition();
+    public void moveMotor(){
+        if (motorOn) {
+            double motorPower = controlSystem.update(targetPosition);
+            motor.setPower(motorPower);
         }
-    };
-    BasicPID controller = new BasicPID(coefficients);
-    NoFeedforward feedforward = new NoFeedforward();
-    RawValue noFilter = new RawValue(motorPosition);
-    BasicSystem system = new BasicSystem(noFilter,controller,feedforward);
-
-    while (true) {
-        double command = system.update(referencePosition);
     }
 
+    public Command retract() {
+        return new InstantCommand(
+                () -> { targetPosition = 860; return null; }
+        );
+    }
 
+    public Command score() {
+        return new InstantCommand(
+                () -> { targetPosition = 350; return null; }
+        );
+    }
 
+    public Command toLower() {
+        return new InstantCommand(
+                () -> { targetPosition = 0; return null; }
+        );
+    }
+
+    public void homeostasisInit() {
+    FeedforwardCoefficientsEx FFCoefficientsEx = new FeedforwardCoefficientsEx(0, 0, 0, 0, Kcos);
+    com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients pidCoefficients = new PIDCoefficients(Kp, Ki, Kd);
+    BasicPID pidController = new BasicPID(pidCoefficients);
+    FeedforwardEx armFeedforward = new FeedforwardEx(FFCoefficientsEx);
+    RawValue noFilter = new RawValue(motor::getCurrentPosition);
+    controlSystem = new BasicSystem(noFilter, pidController, armFeedforward);
+    }
 
 }
