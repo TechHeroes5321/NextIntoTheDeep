@@ -5,7 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.subsystems.SpecimenClaw;
 
 @TeleOp(name = "hypotenuse test")
 
@@ -15,6 +18,7 @@ public class hypotenusetest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     DcMotorEx HypotenuseArm;
     DcMotorEx LinearSlide;
+    Servo SpecimenClaw;
     double motorpower;
 
     /** "init" runs once upon hitting the INIT button*/
@@ -22,6 +26,7 @@ public class hypotenusetest extends OpMode {
     public void init() {
         HypotenuseArm = hardwareMap.get(DcMotorEx.class, "HypotenuseArm");
         HypotenuseArm.setDirection(DcMotorEx.Direction.FORWARD);
+        SpecimenClaw = hardwareMap.get(Servo.class, "SpecimenClaw");
         LinearSlide = hardwareMap.get(DcMotorEx.class, "LinearSlide");
         LinearSlide.setDirection(DcMotorEx.Direction.REVERSE);
         HypotenuseArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -40,6 +45,7 @@ public class hypotenusetest extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+        SpecimenClaw.setPosition(0);
     }
 
     /** "loop" runs repeatedly after hitting play until the OpMode is stopped*/
@@ -76,7 +82,7 @@ public class hypotenusetest extends OpMode {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("hyp pos", HypotenuseArm.getCurrentPosition());
-        telemetry.addData("slide pos", HypotenuseArm.getCurrentPosition());
+        telemetry.addData("slide pos", LinearSlide.getCurrentPosition());
         telemetry.addData("power", motorpower);
         telemetry.addData("velocity", HypotenuseArm.getVelocity());
         telemetry.update();

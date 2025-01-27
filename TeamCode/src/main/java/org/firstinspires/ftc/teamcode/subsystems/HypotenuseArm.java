@@ -25,7 +25,8 @@ public class HypotenuseArm extends Subsystem {
     public static double Kd = 0;
     public static double Kcos = 0;
     public static boolean motorOn = true;
-    public double targetPosition;
+    public static double retractPosition;
+    public double targetPosition = retractPosition;
     public BasicSystem controlSystem;
     public String name = "HypotenuseArm";
 
@@ -56,7 +57,7 @@ public class HypotenuseArm extends Subsystem {
 
     public Command retract() {
         return new InstantCommand(
-                () -> { targetPosition = 860; return null; }
+                () -> { targetPosition = retractPosition; return null; }
         );
     }
 
@@ -68,7 +69,7 @@ public class HypotenuseArm extends Subsystem {
 
     public Command toLower() {
         return new InstantCommand(
-                () -> { targetPosition = 0; return null; }
+                () -> { targetPosition = 26; return null; }
         );
     }
 
