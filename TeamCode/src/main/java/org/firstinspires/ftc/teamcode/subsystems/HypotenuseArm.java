@@ -35,7 +35,7 @@ public class HypotenuseArm extends Subsystem {
                 () -> { motor.setCurrentPosition(0); return null; }
         );
     }
-
+//test
     @Override
     public void initialize() {
         motor = new MotorEx(name);
