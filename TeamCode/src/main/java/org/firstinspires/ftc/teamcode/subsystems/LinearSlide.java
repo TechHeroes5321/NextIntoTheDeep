@@ -6,6 +6,7 @@ import com.ThermalEquilibrium.homeostasis.Filters.Estimators.RawValue;
 import com.ThermalEquilibrium.homeostasis.Parameters.FeedforwardCoefficientsEx;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.ThermalEquilibrium.homeostasis.Systems.BasicSystem;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
@@ -25,7 +26,10 @@ public class LinearSlide extends Subsystem {
     public static boolean motorOn = true;
     public double targetPosition = 0;
     public BasicSystem controlSystem;
+    public PIDCoefficients pidCoefficients;
+    public FeedforwardCoefficientsEx FFCoefficientsEx;
     public String name = "LinearSlide";
+
 
     public Command resetEncoderZero() {
         return new InstantCommand(
@@ -33,7 +37,7 @@ public class LinearSlide extends Subsystem {
         );
     }
 
-    public Command toTop() {
+    public Command toHighBasket() {
         return new InstantCommand(
                 () -> { targetPosition = 3200; return null; }
         );
@@ -45,28 +49,36 @@ public class LinearSlide extends Subsystem {
         );
     }
 
+    public Command grabSpecimenFromWall() {
+        return new InstantCommand(
+                () -> { targetPosition = 200; return null; }
+        );
+    }
+
     public Command prepSpecimen() {
         return new InstantCommand(
-                () -> { targetPosition = 1200; return null; }
+                () -> { targetPosition = 1800; return null; }
         );
     }
 
     public Command scoreSpecimen() {
         return new InstantCommand(
-                () -> { targetPosition = 1200; return null; }
+                () -> { targetPosition = 1450; return null; }
         );
     }
 
     public Command toBottom() {
         return new InstantCommand(
-                () -> { targetPosition = 1200; return null; }
+                () -> { targetPosition = 0; return null; }
         );
     }
 
     @Override
     public void periodic() {
+        homeostasisUpdateConstants();
         moveMotor();
         OpModeData.telemetry.addData("slide pos", motor.getCurrentPosition());
+        OpModeData.telemetry.addData("slide power", motor.getPower());
     }
 
     public void moveMotor() {
@@ -79,16 +91,24 @@ public class LinearSlide extends Subsystem {
     @Override
     public void initialize() {
         motor = new MotorEx(name);
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         homeostasisInit();
     }
 
     public void homeostasisInit() {
-        FeedforwardCoefficientsEx FFCoefficientsEx = new FeedforwardCoefficientsEx(0,0,0,Kg,0);
-        PIDCoefficients pidCoefficients = new PIDCoefficients(Kp, Ki, Kd);
+        FFCoefficientsEx = new FeedforwardCoefficientsEx(0,0,0,Kg,0);
+        pidCoefficients = new PIDCoefficients(Kp, Ki, Kd);
         BasicPID pidController = new BasicPID(pidCoefficients);
         FeedforwardEx armFeedforward = new FeedforwardEx(FFCoefficientsEx);
         RawValue noFilter = new RawValue(motor::getCurrentPosition);
         controlSystem = new BasicSystem(noFilter, pidController, armFeedforward);
+    }
+
+    public void homeostasisUpdateConstants() {
+        pidCoefficients.Kp = Kp;
+        pidCoefficients.Ki = Ki;
+        pidCoefficients.Kd = Kd;
+        FFCoefficientsEx.Kg = Kg;
     }
 
 }

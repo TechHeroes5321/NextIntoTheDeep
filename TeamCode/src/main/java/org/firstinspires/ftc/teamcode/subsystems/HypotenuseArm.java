@@ -25,7 +25,7 @@ public class HypotenuseArm extends Subsystem {
     public static double Kd = 0;
     public static double Kcos = 0;
     public static boolean motorOn = true;
-    public static double retractPosition;
+    public static double retractPosition = 700;
     public double targetPosition = retractPosition;
     public BasicSystem controlSystem;
     public String name = "HypotenuseArm";
@@ -40,6 +40,7 @@ public class HypotenuseArm extends Subsystem {
     public void initialize() {
         motor = new MotorEx(name);
         homeostasisInit();
+        targetPosition = retractPosition;
     }
 
     @Override
