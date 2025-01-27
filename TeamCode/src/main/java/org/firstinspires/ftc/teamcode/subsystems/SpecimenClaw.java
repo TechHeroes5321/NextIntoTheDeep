@@ -37,11 +37,15 @@ public class SpecimenClaw extends Subsystem {
     }
 
     public Command toggle() {
-        if(Objects.equals(state, "OPEN")){
-            return close();
-        } else {
-            return open(); 
-        }
+        return new InstantCommand(
+                () -> {
+                    if(Objects.equals(state, "OPEN")) {
+                        close();
+                    } else {
+                        open();
+                    }
+                    return null; }
+        );
     }
 
     @Override
