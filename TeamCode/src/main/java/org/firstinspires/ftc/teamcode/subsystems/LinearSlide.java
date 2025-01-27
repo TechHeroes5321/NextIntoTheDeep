@@ -6,6 +6,7 @@ import com.ThermalEquilibrium.homeostasis.Filters.Estimators.RawValue;
 import com.ThermalEquilibrium.homeostasis.Parameters.FeedforwardCoefficientsEx;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.ThermalEquilibrium.homeostasis.Systems.BasicSystem;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
@@ -33,7 +34,7 @@ public class LinearSlide extends Subsystem {
         );
     }
 
-    public Command toTop() {
+    public Command toHighBasket() {
         return new InstantCommand(
                 () -> { targetPosition = 3200; return null; }
         );
@@ -45,21 +46,27 @@ public class LinearSlide extends Subsystem {
         );
     }
 
+    public Command grabSpecimenFromWall() {
+        return new InstantCommand(
+                () -> { targetPosition = 200; return null; }
+        );
+    }
+
     public Command prepSpecimen() {
         return new InstantCommand(
-                () -> { targetPosition = 1200; return null; }
+                () -> { targetPosition = 1800; return null; }
         );
     }
 
     public Command scoreSpecimen() {
         return new InstantCommand(
-                () -> { targetPosition = 1200; return null; }
+                () -> { targetPosition = 1450; return null; }
         );
     }
 
     public Command toBottom() {
         return new InstantCommand(
-                () -> { targetPosition = 1200; return null; }
+                () -> { targetPosition = 0; return null; }
         );
     }
 
@@ -79,6 +86,7 @@ public class LinearSlide extends Subsystem {
     @Override
     public void initialize() {
         motor = new MotorEx(name);
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
         homeostasisInit();
     }
 
