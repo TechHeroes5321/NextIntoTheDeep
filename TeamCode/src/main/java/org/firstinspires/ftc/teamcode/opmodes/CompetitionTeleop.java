@@ -95,15 +95,15 @@ public class CompetitionTeleop extends PedroOpMode {
         //gamepadManager.getGamepad1().getDpadLeft().setPressedCommand(Spintake.INSTANCE::stopMoving);
         //gamepadManager.getGamepad2().getDpadRight().setPressedCommand(LinearSlide.INSTANCE::resetEncoderZero);
         //gamepadManager.getGamepad2().getDpadRight().setPressedCommand(HypotenuseArm.INSTANCE::resetEncoderZero);
-        //gamepadManager.getGamepad1().getLeftBumper().setPressedCommand(HypotenuseArm.INSTANCE::toLower);
-        //gamepadManager.getGamepad1().getRightBumper().setPressedCommand(HypotenuseArm.INSTANCE::retract);
-        //gamepadManager.getGamepad1().getY().setPressedCommand(HypotenuseArm.INSTANCE::score);
+        gamepadManager.getGamepad1().getLeftBumper().setPressedCommand(HypotenuseArm.INSTANCE::toLower);
+        gamepadManager.getGamepad1().getRightBumper().setPressedCommand(HypotenuseArm.INSTANCE::retract);
+        gamepadManager.getGamepad1().getY().setPressedCommand(HypotenuseArm.INSTANCE::score);
         //gamepadManager.getGamepad1().getX().setPressedCommand(LinearSlide.INSTANCE::toHighBasket);
-        gamepadManager.getGamepad1().getLeftBumper().setPressedCommand(LinearSlide.INSTANCE::toBottom);
-        gamepadManager.getGamepad1().getDpadDown().setPressedCommand(LinearSlide.INSTANCE::grabSpecimenFromWall);
-        gamepadManager.getGamepad1().getRightBumper().setPressedCommand(LinearSlide.INSTANCE::prepSpecimen);
-        gamepadManager.getGamepad1().getDpadUp().setPressedCommand(LinearSlide.INSTANCE::scoreSpecimen);
-        gamepadManager.getGamepad1().getX().setPressedCommand(LinearSlide.INSTANCE::toHighBasket);
+        //gamepadManager.getGamepad1().getLeftBumper().setPressedCommand(LinearSlide.INSTANCE::toBottom);
+        //gamepadManager.getGamepad1().getDpadDown().setPressedCommand(LinearSlide.INSTANCE::grabSpecimenFromWall);
+        //gamepadManager.getGamepad1().getRightBumper().setPressedCommand(LinearSlide.INSTANCE::prepSpecimen);
+        //gamepadManager.getGamepad1().getDpadUp().setPressedCommand(LinearSlide.INSTANCE::scoreSpecimen);
+        //gamepadManager.getGamepad1().getX().setPressedCommand(LinearSlide.INSTANCE::toHighBasket);
         //gamepadManager.getGamepad1().getDpadRight().setPressedCommand(LinearSlide.INSTANCE::toAscend);
     }
 

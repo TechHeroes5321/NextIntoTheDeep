@@ -25,6 +25,7 @@ public class LinearSlide extends Subsystem {
     public static double Kg = 0;
     public static boolean motorOn = true;
     public double targetPosition = 0;
+    public double motorPower;
     public BasicSystem controlSystem;
     public PIDCoefficients pidCoefficients;
     public FeedforwardCoefficientsEx FFCoefficientsEx;
@@ -78,12 +79,12 @@ public class LinearSlide extends Subsystem {
         homeostasisUpdateConstants();
         moveMotor();
         OpModeData.telemetry.addData("slide pos", motor.getCurrentPosition());
-        OpModeData.telemetry.addData("slide power", motor.getPower());
+        OpModeData.telemetry.addData("slide power", motorPower);
     }
 
     public void moveMotor() {
         if(motorOn) {
-            double motorPower = controlSystem.update(targetPosition);
+            motorPower = controlSystem.update(targetPosition);
             motor.setPower(motorPower);
         }
     }
@@ -91,8 +92,9 @@ public class LinearSlide extends Subsystem {
     @Override
     public void initialize() {
         motor = new MotorEx(name);
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         homeostasisInit();
+        resetEncoderZero();
     }
 
     public void homeostasisInit() {

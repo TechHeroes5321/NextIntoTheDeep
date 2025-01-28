@@ -23,7 +23,7 @@ public class SpecimenClaw extends Subsystem {
     public Command open() {
         return new InstantCommand(
                 () -> { state = "OPEN";
-                    new ServoToPosition(servo, 0.6, this);
+                    new ServoToPosition(servo, 0.6, this).invoke(); // Changed this line
                     return null; }
         );
     }
@@ -31,8 +31,8 @@ public class SpecimenClaw extends Subsystem {
     public Command close() {
         return new InstantCommand(
                 () -> { state = "CLOSED";
-                    new ServoToPosition(servo, 0, this);
-                return null; }
+                    new ServoToPosition(servo, 0, this).invoke(); // Changed this line
+                    return null; }
         );
     }
 
@@ -40,9 +40,9 @@ public class SpecimenClaw extends Subsystem {
         return new InstantCommand(
                 () -> {
                     if(Objects.equals(state, "OPEN")) {
-                        close();
+                        close().invoke();
                     } else {
-                        open();
+                        open().invoke();
                     }
                     return null; }
         );
@@ -56,6 +56,6 @@ public class SpecimenClaw extends Subsystem {
     @Override
     public void initialize() {
         servo = OpModeData.INSTANCE.getHardwareMap().get(Servo.class, name);
-        close();
+        close().invoke(); // Changed this line
     }
 }
