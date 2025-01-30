@@ -4,15 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.SpecimenClaw;
+@TeleOp(name = "Manipulators test")
 
-@TeleOp(name = "hypotenuse test")
-
-public class hypotenusetest extends OpMode {
+public class ManipulatorsTest extends OpMode {
 
     /**Here is where you declare your variables and OpMode Members*/
     private ElapsedTime runtime = new ElapsedTime();
