@@ -1,15 +1,20 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.*;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.groups.SequentialGroup;
 import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
+
 import org.firstinspires.ftc.teamcode.customCommands.armFeedForward;
+import org.jetbrains.annotations.NotNull;
 
 @Config
 public class HypotenuseArm extends Subsystem {
@@ -18,15 +23,15 @@ public class HypotenuseArm extends Subsystem {
     private HypotenuseArm() { }
     // USER CODE
     public MotorEx motor;
-    public static double Kp = 0.0015;
+    public static double Kp = 0.0012;
     public static double Ki = 0;
     public static double Kd = 0;
-    public static double Kcos = 0;
+    public static double Kcos = 0.14;
     public static boolean motorOn = true;
     public static double targetPosition;
-    public double tickOffset;
-    PIDCoefficients pidCoefficients;
-    BasicPID pidController;
+    public double tickOffset = 204;
+    public PIDFController controller = new PIDFController(new PIDCoefficients(Kp,Ki,Kd),
+            v -> armFeedForward.calculate(targetPosition,tickOffset,Kcos,1120));
     public String name = "HypotenuseArm";
 
     public Command resetEncoderZero() {
@@ -35,58 +40,66 @@ public class HypotenuseArm extends Subsystem {
         );
     }
 
+    public void setMotorController() {
+        controller = new PIDFController(new PIDCoefficients(Kp,Ki,Kd),
+                v -> armFeedForward.calculate(motor.getCurrentPosition(),tickOffset,Kcos,1120));
+    }
+
     @Override
     public void initialize() {
         motor = new MotorEx(name);
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        homeostasisInit();
-        retract();
+        setMotorController();
     }
 
     @Override
     public void periodic() {
-        homeostasisUpdateConstants();
-        moveMotor();
+        setMotorController();
         OpModeData.telemetry.addData("arm pos", motor.getCurrentPosition());
+        OpModeData.telemetry.addData("arm target variable", targetPosition);
+        OpModeData.telemetry.addData("controller target", controller.getTarget());
+        OpModeData.telemetry.addData("arm power", motor.getPower());
+    }
+
+    @Override
+    @NotNull
+    public Command getDefaultCommand() {
+        return new HoldPosition(motor, controller, this);
+    }
+
+    public Command toTarget() {
+        return new RunToPosition(motor, targetPosition, controller, this);
     }
 
     public void moveMotor(){
         if (motorOn) {
-            double currentMotorPos = motor.getCurrentPosition();
-            motor.setPower(
-                    pidController.calculate(targetPosition,currentMotorPos)
-                    + armFeedForward.calculate(currentMotorPos,tickOffset,Kcos,1120)
-            );
+            setMotorController();
+            new RunToPosition(motor, targetPosition, controller, this);
         }
     }
 
     public Command retract() {
-        return new InstantCommand(
-                () -> { targetPosition = 850; return null; }
-        );
+        return new RunToPosition(motor, 1000, controller, this);
     }
 
     public Command score() {
-        return new InstantCommand(
-                () -> { targetPosition = 250; return null; }
-        );
+        return new RunToPosition(motor, 250, controller, this);
     }
 
     public Command toLower() {
-        return new InstantCommand(
-                () -> { targetPosition = 26; return null; }
-        );
+        return new SequentialGroup(
+            score(),
+            checkpoint_1(),
+            checkpoint_2()
+            );
     }
 
-    public void homeostasisInit() {
-    pidCoefficients = new PIDCoefficients(Kp, Ki, Kd);
-    pidController = new BasicPID(pidCoefficients);
+    public Command checkpoint_1() {
+        return new RunToPosition(motor, 80, controller, this);
     }
 
-    public void homeostasisUpdateConstants() {
-        pidCoefficients.Kp = Kp;
-        pidCoefficients.Ki = Ki;
-        pidCoefficients.Kd = Kd;
+    public Command checkpoint_2() {
+        return new RunToPosition(motor, 26, controller, this);
     }
 
 }

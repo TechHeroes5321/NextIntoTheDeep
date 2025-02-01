@@ -1,17 +1,17 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedforward.FeedforwardEx;
-import com.ThermalEquilibrium.homeostasis.Filters.Estimators.RawValue;
-import com.ThermalEquilibrium.homeostasis.Parameters.FeedforwardCoefficientsEx;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
-import com.ThermalEquilibrium.homeostasis.Systems.BasicSystem;
+import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
+import com.rowanmcalpin.nextftc.core.control.coefficients.PIDCoefficients;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.RunToPosition;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
 import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
 import com.rowanmcalpin.nextftc.ftc.OpModeData;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.MotorEx;
+import com.rowanmcalpin.nextftc.ftc.hardware.controllables.HoldPosition;
+
+import org.jetbrains.annotations.NotNull;
 
 public class LinearSlide extends Subsystem {
     // BOILERPLATE
@@ -22,15 +22,12 @@ public class LinearSlide extends Subsystem {
     public static double Kp = 0.005;
     public static double Ki = 0;
     public static double Kd = 0;
-    public static double Kg = 0;
+    public static double Kf = 0;
     public static boolean motorOn = true;
     public double targetPosition = 0;
     public double motorPower;
-    public BasicSystem controlSystem;
-    public PIDCoefficients pidCoefficients;
-    public FeedforwardCoefficientsEx FFCoefficientsEx;
+    public PIDFController controller = new PIDFController(new PIDCoefficients(Kp,Ki,Kd), v -> Kf);
     public String name = "LinearSlide";
-
 
     public Command resetEncoderZero() {
         return new InstantCommand(
@@ -38,54 +35,45 @@ public class LinearSlide extends Subsystem {
         );
     }
 
+    @Override
+    @NotNull
+    public Command getDefaultCommand() {
+        return new HoldPosition(motor, controller, this);
+    }
+
     public Command toHighBasket() {
-        return new InstantCommand(
-                () -> { targetPosition = 3200; return null; }
-        );
+        return new RunToPosition(motor, 3200, controller, this);
     }
 
     public Command toAscend() {
-        return new InstantCommand(
-                () -> { targetPosition = 1993; return null; }
-        );
+        return new RunToPosition(motor, 1993, controller, this);
     }
 
     public Command grabSpecimenFromWall() {
-        return new InstantCommand(
-                () -> { targetPosition = 200; return null; }
-        );
+        return new RunToPosition(motor, 200, controller, this);
     }
 
     public Command prepSpecimen() {
-        return new InstantCommand(
-                () -> { targetPosition = 1800; return null; }
-        );
+        return new RunToPosition(motor, 1800, controller, this);
     }
 
     public Command scoreSpecimen() {
-        return new InstantCommand(
-                () -> { targetPosition = 1450; return null; }
-        );
+        return new RunToPosition(motor, 1450, controller, this);
     }
 
     public Command toBottom() {
-        return new InstantCommand(
-                () -> { targetPosition = 0; return null; }
-        );
+        return new RunToPosition(motor, 0, controller, this);
     }
 
     @Override
     public void periodic() {
-        homeostasisUpdateConstants();
-        moveMotor();
         OpModeData.telemetry.addData("slide pos", motor.getCurrentPosition());
         OpModeData.telemetry.addData("slide power", motorPower);
     }
 
     public void moveMotor() {
         if(motorOn) {
-            motorPower = controlSystem.update(targetPosition);
-            motor.setPower(motorPower);
+            new RunToPosition(motor, targetPosition, controller, this);
         }
     }
 
@@ -93,24 +81,7 @@ public class LinearSlide extends Subsystem {
     public void initialize() {
         motor = new MotorEx(name);
         motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        homeostasisInit();
         resetEncoderZero();
-    }
-
-    public void homeostasisInit() {
-        FFCoefficientsEx = new FeedforwardCoefficientsEx(0,0,0,Kg,0);
-        pidCoefficients = new PIDCoefficients(Kp, Ki, Kd);
-        BasicPID pidController = new BasicPID(pidCoefficients);
-        FeedforwardEx armFeedforward = new FeedforwardEx(FFCoefficientsEx);
-        RawValue noFilter = new RawValue(motor::getCurrentPosition);
-        controlSystem = new BasicSystem(noFilter, pidController, armFeedforward);
-    }
-
-    public void homeostasisUpdateConstants() {
-        pidCoefficients.Kp = Kp;
-        pidCoefficients.Ki = Ki;
-        pidCoefficients.Kd = Kd;
-        FFCoefficientsEx.Kg = Kg;
     }
 
 }

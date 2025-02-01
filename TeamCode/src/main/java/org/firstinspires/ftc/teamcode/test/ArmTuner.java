@@ -27,7 +27,7 @@ public class ArmTuner extends OpMode {
         motor.setPower(motorPower);
         double currentMotorTick = motor.getCurrentPosition();
         double motorCurrentDraw = motor.getCurrent(CurrentUnit.MILLIAMPS);
-        if(motorCurrentDraw > maxCurrentDraw) {
+        if(motorCurrentDraw > maxCurrentDraw && currentMotorTick < 300) {
             maxCurrentDraw = motorCurrentDraw;
             foundTickValue = currentMotorTick;
         }
